@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using TheBlackTale.Client;
 
 namespace TheBlackTale
 {
@@ -22,6 +24,16 @@ namespace TheBlackTale
     {
         public MainWindow()
         {
+            try
+            {
+                Client.Client client = new();
+            }
+            catch(Exception ex)
+            {
+                StreamWriter sw = new StreamWriter("log.txt");
+                sw.WriteLine(ex.Message);
+                sw.Close();
+            }
             InitializeComponent();
         }
     }
