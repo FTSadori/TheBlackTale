@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,10 @@ namespace TheBlackTale
             try
             {
                 Client.Client client = new();
+
+                client.Send("wow cool");
+                Thread.Sleep(4000);
+                client.Send("really cool");
             }
             catch(Exception ex)
             {
