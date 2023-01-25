@@ -27,15 +27,15 @@ namespace TheBlackTale
         {
             try
             {
-                Client.Client client = new();
+                ClientHandler.Connect();
 
-                client.Send("wow cool");
+                ClientHandler.Send("wow cool");
                 Thread.Sleep(4000);
-                client.Send("really cool");
+                ClientHandler.Send("really cool");
             }
             catch(Exception ex)
             {
-                StreamWriter sw = new StreamWriter("log.txt");
+                StreamWriter sw = new("log.txt");
                 sw.WriteLine(ex.Message);
                 sw.Close();
             }

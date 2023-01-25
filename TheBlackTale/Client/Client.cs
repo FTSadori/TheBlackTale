@@ -9,25 +9,57 @@ using System.Net.Sockets;
 
 namespace TheBlackTale.Client
 {
-    public class Client
+    public static class ClientHandler
     {
-        public Client()
+        class SocketGuard
         {
-            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            clientSocket.Connect(IPAddress.Parse("25.60.223.48"), 5050);
+            public Socket Socket { get; private set; }
+            public SocketGuard(Socket socket)
+            {
+                Socket = socket ?? throw new ArgumentNullException(nameof(socket));
+            }
+            ~SocketGuard()
+            {
+                Socket.Close(); 
+            }
         }
 
-        public void Send(string message)
+        class Command
         {
-            clientSocket.Send(Encoding.ASCII.GetBytes(message));
+            private List<string> args = new();
+            private string Mode { get; set; }
+
+            public string this[int index] { get { return args[index]; } }
+            public int Count { get { return args.Count; } }
+
+            public Command(string mode, string cmd)
+            {
+                Mode = mode;
+                args = cmd.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
         }
 
-        ~Client()
+        static ClientHandler()
         {
-            clientSocket.Close();
+            clientSocket = new(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
         }
 
-        Socket clientSocket;
+        public static void Connect()
+        {
+            clientSocket.Socket.Connect(IPAddress.Parse("25.60.223.48"), 5050);
+        }
+
+        public static void Send(string message)
+        {
+            clientSocket.Socket.Send(Encoding.ASCII.GetBytes(message));
+        }
+
+        public static void Close()
+        {
+            clientSocket.Socket.Close();
+        }
+
+        readonly static SocketGuard clientSocket;
+
     }
 }
